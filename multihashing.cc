@@ -34,7 +34,7 @@ using namespace v8;
 
 void except(const char* msg) {
 	Isolate* isolate = Isolate::GetCurrent();
-    isolate->ThrowException(Exception::Error(String::NewFromUtf8(isolate, msg)));
+    isolate->ThrowException(Exception::Error(String::NewFromUtf8(isolate, msg, NewStringType::kNormal).ToLocalChecked()));
 }
 
 void quark(const FunctionCallbackInfo<Value>& args) {
@@ -43,7 +43,7 @@ void quark(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -65,7 +65,7 @@ void x11(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -87,14 +87,14 @@ void scrypt(const FunctionCallbackInfo<Value>& args) {
    if (args.Length() < 3)
        return except("You must provide buffer to hash, N value, and R value");
 
-   Local<Object> target = args[0]->ToObject();
+   Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
    if(!Buffer::HasInstance(target))
        return except("Argument should be a buffer object.");
     
-   Local<Number> numn = args[1]->ToNumber(isolate);
+   Local<Number> numn = args[1]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
    unsigned int nValue = numn->Value();
-   Local<Number> numr = args[2]->ToNumber(isolate);
+   Local<Number> numr = args[2]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
    unsigned int rValue = numr->Value();
    
    char * input = Buffer::Data(target);
@@ -116,12 +116,12 @@ void scryptn(const FunctionCallbackInfo<Value>& args) {
    if (args.Length() < 2)
        return except("You must provide buffer to hash and N factor.");
 
-   Local<Object> target = args[0]->ToObject();
+   Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
    if(!Buffer::HasInstance(target))
        return except("Argument should be a buffer object.");
 
-   Local<Number> num = args[1]->ToNumber(isolate);
+   Local<Number> num = args[1]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
    unsigned int nFactor = num->Value();
 
    char * input = Buffer::Data(target);
@@ -145,21 +145,21 @@ void scryptjane(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 5)
         return except("You must provide two argument: buffer, timestamp as number, and nChainStarTime as number, nMin, and nMax");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("First should be a buffer object.");
 
-    Local<Number> num = args[1]->ToNumber(isolate);
+    Local<Number> num = args[1]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
     int timestamp = num->Value();
 
-    Local<Number> num2 = args[2]->ToNumber(isolate);
+    Local<Number> num2 = args[2]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
     int nChainStartTime = num2->Value();
 
-    Local<Number> num3 = args[3]->ToNumber(isolate);
+    Local<Number> num3 = args[3]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
     int nMin = num3->Value();
 
-    Local<Number> num4 = args[4]->ToNumber(isolate);
+    Local<Number> num4 = args[4]->ToNumber(isolate->GetCurrentContext()).ToLocalChecked();
     int nMax = num4->Value();
 
     char * input = Buffer::Data(target);
@@ -179,7 +179,7 @@ void yescrypt(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-   Local<Object> target = args[0]->ToObject();
+   Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
    if(!Buffer::HasInstance(target))
        return except("Argument should be a buffer object.");
@@ -201,7 +201,7 @@ void keccak(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -224,7 +224,7 @@ void bcrypt(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -244,7 +244,7 @@ void skein(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -267,7 +267,7 @@ void groestl(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -290,7 +290,7 @@ void groestlmyriad(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -313,7 +313,7 @@ void blake(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -336,7 +336,7 @@ void fugue(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -359,7 +359,7 @@ void qubit(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -382,7 +382,7 @@ void hefty1(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -405,7 +405,7 @@ void shavite3(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -432,10 +432,10 @@ void cryptonight(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() >= 2) {
         if(!args[1]->IsBoolean())
             return except("Argument 2 should be a boolean");
-        fast = args[1]->ToBoolean()->BooleanValue();
+        fast = Nan::To<Boolean>(args[1]).ToLocalChecked()->Value();
     }
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -460,7 +460,7 @@ void x13(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -482,8 +482,8 @@ void boolberry(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 2)
         return except("You must provide two arguments.");
 
-    Local<Object> target = args[0]->ToObject();
-    Local<Object> target_spad = args[1]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+    Local<Object> target_spad = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
     uint32_t height = 1;
 
     if(!Buffer::HasInstance(target))
@@ -492,11 +492,12 @@ void boolberry(const FunctionCallbackInfo<Value>& args) {
     if(!Buffer::HasInstance(target_spad))
         return except("Argument 2 should be a buffer object.");
 
-    if(args.Length() >= 3)
+    if(args.Length() >= 3) {
         if(args[2]->IsUint32())
-            height = args[2]->Uint32Value();
+            height = args[2]->ToUint32(isolate->GetCurrentContext()).ToLocalChecked()->Value();
         else
             return except("Argument 3 should be an unsigned integer.");
+    }
 
     char * input = Buffer::Data(target);
     char * scratchpad = Buffer::Data(target_spad);
@@ -517,7 +518,7 @@ void nist5(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -539,7 +540,7 @@ void sha1(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -561,7 +562,7 @@ void x15(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -583,7 +584,7 @@ void fresh(const FunctionCallbackInfo<Value>& args) {
     if (args.Length() < 1)
         return except("You must provide one argument.");
 
-    Local<Object> target = args[0]->ToObject();
+    Local<Object> target = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
 
     if(!Buffer::HasInstance(target))
         return except("Argument should be a buffer object.");
@@ -599,7 +600,7 @@ void fresh(const FunctionCallbackInfo<Value>& args) {
     args.GetReturnValue().Set(buff);
 }
 
-void init(Handle<Object> exports) {
+void init(Local<Object> exports) {
     NODE_SET_METHOD(exports, "quark", quark);
     NODE_SET_METHOD(exports, "x11", x11);
     NODE_SET_METHOD(exports, "scrypt", scrypt);
